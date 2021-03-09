@@ -28,7 +28,7 @@ router.post('/dialogflow', function (request, response, next) {
 
     let intentMap = new Map();
     intentMap.set('Kontostand', accountBalance);
-    intentMap.set('voice print', voicePrint);
+    intentMap.set('Kontostand - Code', accountBalance);
     return agent.handleRequest(intentMap);
 });
 

@@ -21,19 +21,29 @@ module.exports = {
 
 function withVoicePrint(agent, onAccept) {
     const keyword = "Haustür";
-    let spokenWord = agent.parameters["spokenWord"];
+
+    let spokenWord = agent.parameters["word"];
+    console.log("spokenWord: " + spokenWord);
     if (spokenWord === undefined || spokenWord.length === 0) {
-        agent.add("Bitte wiederhole folgendes Wort zur Authentifizierung: " + keyword);
-    } else {
+        let conv = agent.conv();
+        conv.ask("Bitte wiederholen Sie folgendes Wort zur Authentifizierung: " + keyword)
+        agent.add(conv);
+    } else if (spokenWord === keyword) {
         onAccept();
+    } else {
+        let conv = agent.conv();
+        conv.ask("Die Authentifzierung war nicht erfolgreich. Bitte wiederholen Sie das Wort : " +
+                     keyword +
+                     " nochmals");
+        agent.add(conv);
     }
 }
 
 function withGoogleAuth(agent, onAccept) {
-    let pinParam = agent.parameters["pin"];
-    if (pinParam.length === 0) {
+    let code = agent.parameters["code"];
+    if (code === undefined || code.length === 0) {
         agent.add("Sie müssen authentifizieren, bitte sagen Sie den Code?");
-    } else if (!verifyTwoFactorAuthenticationCode(pinParam)) {
+    } else if (!verifyTwoFactorAuthenticationCode(code)) {
         agent.add("Der Code ist falsch. Bitte versuchen Sie es nochmals");
     } else {
         onAccept();
@@ -41,10 +51,10 @@ function withGoogleAuth(agent, onAccept) {
 }
 
 function withPin(agent, onAccept) {
-    let pinParam = agent.parameters["pin"];
-    if (pinParam.length === 0) {
+    let pinParam = agent.parameters["code"];
+    if (pinParam === undefined || pinParam.length === 0) {
         agent.add("Wie lautet ihr Pin?");
-    } else if (pinParam !== 6428) {
+    } else if (parseInt(pinParam) !== 6428) {
         agent.add("Der Pin ist falsch. Bitte versuchen Sie es nochmals");
     } else {
         onAccept();
