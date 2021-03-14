@@ -29,6 +29,7 @@ router.post('/dialogflow', function (request, response, next) {
     let intentMap = new Map();
     intentMap.set('Kontostand', accountBalance);
     intentMap.set('Kontostand - Code', accountBalance);
+    intentMap.set('Kontostand - VoiceCode', accountBalance);
     return agent.handleRequest(intentMap);
 });
 

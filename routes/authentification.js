@@ -3,10 +3,12 @@ const AUTH_METHOD_PIN = "Pin";
 const AUTH_METHOD_GOOGLE_AUTH = "Google Authenticator";
 const AUTH_METHOD_VOICE_PRINT = "Voice Print";
 
-const AUTH_METHOD = AUTH_METHOD_VOICE_PRINT;
+const AUTH_METHOD = AUTH_METHOD_GOOGLE_AUTH;
 
 module.exports = {
     authenticate: function authenticate(agent, onAccept) {
+        console.log("parameters: " + agent.parameters);
+
         if (AUTH_METHOD === AUTH_METHOD_PIN) {
             withPin(agent, onAccept);
         } else if (AUTH_METHOD === AUTH_METHOD_GOOGLE_AUTH) {
@@ -23,7 +25,6 @@ function withVoicePrint(agent, onAccept) {
     const keyword = "Haustür";
 
     let spokenWord = agent.parameters["word"];
-    console.log("spokenWord: " + spokenWord);
     if (spokenWord === undefined || spokenWord.length === 0) {
         let conv = agent.conv();
         conv.ask("Bitte wiederholen Sie folgendes Wort zur Authentifizierung: " + keyword)
