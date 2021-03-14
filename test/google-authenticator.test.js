@@ -1,5 +1,6 @@
 const verifyTwoFactorAuthenticationCode = require("../routes/google-authenticator");
 const generateNewAppAuthenticationSecret = require("../routes/google-authenticator");
+const sendPushNotification = require("../routes/pushover");
 const {describe} = require("@jest/globals");
 describe('2FA Code', () => {
     let code = generateNewAppAuthenticationSecret();

@@ -1,5 +1,5 @@
 const verifyTwoFactorAuthenticationCode = require("./google-authenticator");
-const sendNotification = require("./mailer");
+const sendPushNotification = require("./pushover");
 const AUTH_METHOD_PIN = "Pin";
 const AUTH_METHOD_GOOGLE_AUTH = "Google Authenticator";
 const AUTH_METHOD_VOICE_PRINT = "Voice Print";
@@ -81,7 +81,7 @@ function withPin(agent, onAccept) {
 function withSoundAuth(agent, onAccept) {
     let spokenWord = agent.parameters["word"];
     if (spokenWord === undefined || spokenWord.length === 0) {
-        setTimeout(args => sendNotification(), 8000);
+        setTimeout(args => sendPushNotification(), 16000);
         agent.add(
             "Ich verwende Ihr Mobiltelefon zur Authentifzierung. Bitte sagen Sie: Sprach bank mach weiter, nachdem Ihr Mobiltelefon einen Ton abgespielt hat.");
     } else {

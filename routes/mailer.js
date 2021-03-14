@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
 
 const mailOptions = {
     from: 'voicebank2000@gmail.com',
-    to: 'thomas.neff86@icloud.com',
+    to: '',
     subject: 'sprachbank',
     text: 'That was easy!'
 };
