@@ -9,12 +9,24 @@ module.exports = {
     authenticate: function authenticate(agent, onAccept) {
         console.log("parameters: " + agent.parameters);
 
+        let success = () => {
+            for (let key in agent.parameters) {
+                agent.parameters[key] = "ok";
+            }
+
+            onAccept();
+        };
+
+        if (agent.parameters["word"] === undefined) {
+            agent.add("Sie müssen sich zuerst authentifizieren.")
+        }
+
         if (AUTH_METHOD === AUTH_METHOD_PIN) {
-            withPin(agent, onAccept);
+            withPin(agent, success);
         } else if (AUTH_METHOD === AUTH_METHOD_GOOGLE_AUTH) {
-            withGoogleAuth(agent, onAccept);
+            withGoogleAuth(agent, success);
         } else if (AUTH_METHOD === AUTH_METHOD_VOICE_PRINT) {
-            withVoicePrint(agent, onAccept);
+            withVoicePrint(agent, success);
         } else {
             agent.add("Unbekannte Authentifizierungs-Methode: " + AUTH_METHOD);
         }
@@ -43,7 +55,7 @@ function withVoicePrint(agent, onAccept) {
 function withGoogleAuth(agent, onAccept) {
     let code = agent.parameters["code"];
     if (code === undefined || code.length === 0) {
-        agent.add("Sie müssen authentifizieren, bitte sagen Sie den Code?");
+        agent.add("Bitte sagen Sie den Code?");
     } else if (!verifyTwoFactorAuthenticationCode(code)) {
         agent.add("Der Code ist falsch. Bitte versuchen Sie es nochmals");
     } else {
@@ -54,7 +66,7 @@ function withGoogleAuth(agent, onAccept) {
 function withPin(agent, onAccept) {
     let pinParam = agent.parameters["code"];
     if (pinParam === undefined || pinParam.length === 0) {
-        agent.add("Wie lautet ihr Pin?");
+        agent.add("Wie lautet ihr persönlicher Pin?");
     } else if (parseInt(pinParam) !== 6428) {
         agent.add("Der Pin ist falsch. Bitte versuchen Sie es nochmals");
     } else {
