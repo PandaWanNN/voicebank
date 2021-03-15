@@ -2,7 +2,6 @@ const express = require('express');
 const {WebhookClient} = require("dialogflow-fulfillment");
 const router = express.Router();
 const auth = require('./authentification')
-const startVoicePrint = require("../intents/voiceprint");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -19,11 +18,7 @@ router.post('/dialogflow', function (request, response, next) {
     console.log("intent: " + agent.intent);
 
     function accountBalance(agent) {
-        auth.authenticate(agent, () => agent.add(`Du hast kein Geld mehr`));
-    }
-
-    function voicePrint(agent) {
-        startVoicePrint(agent);
+        auth.authenticate(agent, () => agent.add(`Ihr Kontostand beträgt CHF 17536.90`));
     }
 
     let intentMap = new Map();
