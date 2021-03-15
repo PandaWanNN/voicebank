@@ -15,9 +15,10 @@ router.get('/test', function (req, res, next) {
 
 
 const invoices = new Map();
-invoices.set(1, "Swisscom");
-invoices.set(2, "Swica");
-invoices.set(3, "Stadwerke");
+invoices.set(1, "Strom & Wasser AG, fällig am 2. Juni 2021, über CHF 421.75");
+invoices.set(2, "Kreditkarten AG, fällig am 2. Mai 2021, über CHF 1598.10");
+invoices.set(3, "Krankenkasse AG, fällig am 31. Mai 2021, über CHF 345.50");
+invoices.set(4, "Handy AG, fällig am 15. Mai 2021, über CHF 35.50");
 
 router.post('/dialogflow', function (request, response, next) {
     const agent = new WebhookClient({request, response});
@@ -27,29 +28,45 @@ router.post('/dialogflow', function (request, response, next) {
         auth.authenticate(agent, () => agent.add(`Ihr Kontostand beträgt CHF 17536.90`));
     }
 
+    function createPaymentQuestionPhrase() {
+        return "Möchten Sie die Rechnung von " + invoices.get(invoices.size) + " bezahlen?";
+    }
+
     function payment(agent) {
-        let invoiceNumber = agent.parameters["ordinal"];
+        const startMessage = "Sie haben 4 Rechnungen in Ihrem e-Bill Postfach:\n" +
+            "Die erste Rechnung ist von Handy AG, über CHF 35.50.\n" +
+            "Die zweite von Krankenkasse AG, über CHF 345.50.\n" +
+            "Die dritte von Kreditkarten AG, über CHF 1598.10.\n" +
+            "und die vierte von den Strom & Wasser AG, über CHF 421.75.\n" +
+            "\n" +
+            createPaymentQuestionPhrase();
 
-        function successMessage(companyName) {
-            agent.add("Die Rechnung von: " + companyName + " wurde in Auftrag gegeben");
-        }
+        agent.add(startMessage);
+    }
 
-        if (invoiceNumber !== undefined && invoiceNumber.length !== 0) {
-            console.log(invoiceNumber);
-            let companyName = invoices.get(invoiceNumber);
-            successMessage(companyName);
+    function paymentYes(agent) {
+        invoices.delete(invoices.size);
+        agent.add("Die Rechnung wurde in Auftrag gegeben.");
+
+        if (invoices.size !== 0) {
+            agent.add("Möchten Sie die nächste Rechnung von " + invoices.get(invoices.size) + " ebenfalls bezahlen?");
         } else {
-            agent.add(
-                "Ich habe Sie nicht verstanden. Bitte wiederholen Sie nochmals welche Rechnung Sie bezahlen möchten");
+            agent.add("Alle Rechnungen wurden bearbeitet.");
         }
+    }
 
+    function paymentNo(agent) {
+        invoices.delete(invoices.size);
+        agent.add(createPaymentQuestionPhrase());
     }
 
     let intentMap = new Map();
     intentMap.set('Kontostand', accountBalance);
     intentMap.set('Kontostand - Code', accountBalance);
     intentMap.set('Kontostand - VoiceCode', accountBalance);
-    intentMap.set('Payment - Answer', payment);
+    intentMap.set('Payment', payment);
+    intentMap.set('Payment - yes', paymentYes);
+    intentMap.set('Payment - no', paymentNo);
     return agent.handleRequest(intentMap);
 });
 
