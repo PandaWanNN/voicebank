@@ -1,11 +1,13 @@
 const verifyTwoFactorAuthenticationCode = require("./google-authenticator");
 const sendPushNotification = require("./pushover");
+const startMicrosoftAuth = require("./microsoft-authenticator");
 const AUTH_METHOD_PIN = "Pin";
 const AUTH_METHOD_GOOGLE_AUTH = "Google Authenticator";
 const AUTH_METHOD_VOICE_PRINT = "Voice Print";
 const AUTH_METHOD_SOUND_AUTH = "Sound Auth";
+const AUTH_METHOD_MICROSOFT_AUTH = "Microsoft Authenticator";
 
-const AUTH_METHOD = AUTH_METHOD_SOUND_AUTH;
+const AUTH_METHOD = AUTH_METHOD_MICROSOFT_AUTH;
 
 module.exports = {
     authenticate: function authenticate(agent, onAccept) {
@@ -31,6 +33,8 @@ module.exports = {
             withVoicePrint(agent, success);
         } else if (AUTH_METHOD === AUTH_METHOD_SOUND_AUTH) {
             withSoundAuth(agent, success);
+        } else if (AUTH_METHOD === AUTH_METHOD_MICROSOFT_AUTH) {
+            withMicrosoftAuth(agent, success);
         } else {
             agent.add("Unbekannte Authentifizierungs-Methode: " + AUTH_METHOD);
         }
@@ -84,6 +88,17 @@ function withSoundAuth(agent, onAccept) {
         setTimeout(args => sendPushNotification(), 16000);
         agent.add(
             "Ich verwende Ihr Mobiltelefon zur Authentifzierung. Bitte sagen Sie: Sprach bank mach weiter, nachdem Ihr Mobiltelefon einen Ton abgespielt hat.");
+    } else {
+        onAccept();
+    }
+}
+
+function withMicrosoftAuth(agent, onAccept) {
+    let spokenWord = agent.parameters["word"];
+    if (spokenWord === undefined || spokenWord.length === 0) {
+        setTimeout(args => startMicrosoftAuth(), 8000);
+        agent.add(
+            "Bitte bestätigen Sie den Zugang auf ihrem Mobiltelefon und sagen sie anschliessend: Sprach bank mach weiter.");
     } else {
         onAccept();
     }
