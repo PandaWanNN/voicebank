@@ -6,6 +6,7 @@ const AUTH_METHOD_GOOGLE_AUTH = "Google Authenticator";
 const AUTH_METHOD_VOICE_PRINT = "Voice Print";
 const AUTH_METHOD_SOUND_AUTH = "Sound Auth";
 const AUTH_METHOD_MICROSOFT_AUTH = "Microsoft Authenticator";
+const AUTH_METHOD_NONE = "None";
 
 const AUTH_METHOD = AUTH_METHOD_MICROSOFT_AUTH;
 const CUSTOM_PIN = 6428;
@@ -22,7 +23,7 @@ module.exports = {
             onAccept();
         };
 
-        if (agent.parameters["word"] === undefined) {
+        if (AUTH_METHOD !== AUTH_METHOD_NONE && agent.parameters["word"] === undefined) {
             agent.add("Sie müssen sich zuerst authentifizieren.")
         }
 
@@ -36,6 +37,8 @@ module.exports = {
             withSoundAuth(agent, success);
         } else if (AUTH_METHOD === AUTH_METHOD_MICROSOFT_AUTH) {
             withMicrosoftAuth(agent, success);
+        } else if (AUTH_METHOD === AUTH_METHOD_NONE) {
+            success();
         } else {
             agent.add("Unbekannte Authentifizierungs-Methode: " + AUTH_METHOD);
         }
