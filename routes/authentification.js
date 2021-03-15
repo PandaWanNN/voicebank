@@ -8,6 +8,7 @@ const AUTH_METHOD_SOUND_AUTH = "Sound Auth";
 const AUTH_METHOD_MICROSOFT_AUTH = "Microsoft Authenticator";
 
 const AUTH_METHOD = AUTH_METHOD_MICROSOFT_AUTH;
+const CUSTOM_PIN = 6428;
 
 module.exports = {
     authenticate: function authenticate(agent, onAccept) {
@@ -71,11 +72,12 @@ function withGoogleAuth(agent, onAccept) {
     }
 }
 
+
 function withPin(agent, onAccept) {
     let pinParam = agent.parameters["code"];
     if (pinParam === undefined || pinParam.length === 0) {
         agent.add("Wie lautet ihr persönlicher Pin?");
-    } else if (parseInt(pinParam) !== 6428) {
+    } else if (parseInt(pinParam) !== CUSTOM_PIN) {
         agent.add("Der Pin ist falsch. Bitte versuchen Sie es nochmals");
     } else {
         onAccept();
