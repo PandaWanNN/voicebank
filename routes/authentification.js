@@ -57,7 +57,7 @@ function withVoicePrint(agent, onAccept) {
         onAccept();
     } else {
         let conv = agent.conv();
-        conv.ask("Die Authentifzierung war nicht erfolgreich. Bitte wiederholen Sie das Wort : " +
+        conv.ask("Die Authentifizierung war nicht erfolgreich. Bitte wiederholen Sie das Wort : " +
                      keyword +
                      " nochmals");
         agent.add(conv);
@@ -92,7 +92,7 @@ function withSoundAuth(agent, onAccept) {
     if (spokenWord === undefined || spokenWord.length === 0) {
         setTimeout(args => sendPushNotification(), 16000);
         agent.add(
-            "Ich verwende Ihr Mobiltelefon zur Authentifzierung. Bitte sagen Sie: Sprach bank mach weiter, nachdem Ihr Mobiltelefon einen Ton abgespielt hat.");
+            "Ich verwende Ihr Mobiltelefon zur Authentifizierung. Bitte sagen Sie: Sprach bank mach weiter, nachdem Ihr Mobiltelefon einen Ton abgespielt hat.");
     } else {
         onAccept();
     }
