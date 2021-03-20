@@ -1,5 +1,41 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+    h1= title
+    p Welcome to #{title}
+
+    h2= "Vorbereitung"
+    ul
+        each val in ["Handy auf laut stellen", "Handy zu richtigem Screen navigieren", "Handy Code deaktivieren", "URL in Dialogflow eintragen", "Backend starten"]
+            li= val
+
+
+    h2= "Rechnungen bezahlen"
+    ul
+        each val in ["hasInvoice auf true stellen", "auth deaktivieren", "neustarten"]
+            li= val
+
+    h2= "PIN"
+    ul
+            each val in ["hasInvoice auf false stellen", "auth auf pin stellen", "neustarten"]
+                li= val
+
+    h2= "Voice Print"
+    ul
+            each val in ["auth auf voicePrint stellen","neustarten"]
+                li= val
+
+    h2= "Google Auth"
+    ul
+            each val in ["auth auf Google Auth stellen","neustarten"]
+                li= val
+
+    h2= "Microsoft Auth"
+    ul
+            each val in ["auth auf Microsoft Auth stellen", "neustarten"]
+                li= val
+
+    h2= "SoundAuth"
+    ul
+            each val in ["auth auf SoundAuth stellen", "neustarten"]
+                li= val

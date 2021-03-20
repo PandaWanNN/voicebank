@@ -9,15 +9,22 @@ invoices.set(4, "Handy AG, fällig am 15. Mai 2021, über CHF 35.50");
 module.exports = {
     payment: function payment(agent) {
         auth.authenticate(agent, () => {
-            const startMessage = "Sie haben 4 Rechnungen in Ihrem e-Bill Postfach:\n" +
-                "Die erste Rechnung ist von Handy AG, über CHF 35.50.\n" +
-                "Die zweite von Krankenkasse AG, über CHF 345.50.\n" +
-                "Die dritte von Kreditkarten AG, über CHF 1598.10.\n" +
-                "und die vierte von den Strom & Wasser AG, über CHF 421.75.\n" +
-                "\n" +
-                createPaymentQuestionPhrase();
+            const hasInvoices = true;
 
-            agent.add(startMessage);
+            if (hasInvoices) {
+                const startMessage = "Sie haben 4 Rechnungen in Ihrem e-Bill Postfach:\n" +
+                    "Die erste Rechnung ist von Handy AG, über CHF 35.50.\n" +
+                    "Die zweite von Krankenkasse AG, über CHF 345.50.\n" +
+                    "Die dritte von Kreditkarten AG, über CHF 1598.10.\n" +
+                    "und die vierte von den Strom & Wasser AG, über CHF 421.75.\n" +
+                    "\n" +
+                    createPaymentQuestionPhrase();
+
+                agent.add(startMessage);
+            } else {
+                agent.add("Sie haben keine offenen Rechnungen.");
+            }
+
         });
     },
 
