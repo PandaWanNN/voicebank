@@ -23,14 +23,15 @@ router.post('/dialogflow', function (request, response, next) {
     function accountBalance(agent) {
         auth.authenticate(agent, () => agent.add(`Ihr Kontostand beträgt CHF 17536.90`));
     }
-
     let intentMap = new Map();
     intentMap.set('Kontostand', accountBalance);
     intentMap.set('Kontostand - Code', accountBalance);
     intentMap.set('Kontostand - VoiceCode', accountBalance);
     intentMap.set('Payment', payment);
+    intentMap.set('Payment - code', payment);
     intentMap.set('Payment - yes', paymentYes);
     intentMap.set('Payment - no', paymentNo);
+    intentMap.set('Pin config', auth.pinConfig);
     return agent.handleRequest(intentMap);
 });
 

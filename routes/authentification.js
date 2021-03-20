@@ -8,8 +8,8 @@ const AUTH_METHOD_SOUND_AUTH = "Sound Auth";
 const AUTH_METHOD_MICROSOFT_AUTH = "Microsoft Authenticator";
 const AUTH_METHOD_NONE = "None";
 
-const AUTH_METHOD = AUTH_METHOD_MICROSOFT_AUTH;
-const CUSTOM_PIN = 6428;
+const AUTH_METHOD = AUTH_METHOD_PIN;
+let CUSTOM_PIN;
 
 module.exports = {
     authenticate: function authenticate(agent, onAccept) {
@@ -42,7 +42,28 @@ module.exports = {
         } else {
             agent.add("Unbekannte Authentifizierungs-Methode: " + AUTH_METHOD);
         }
+
+    },
+
+    pinConfig: function pinConfig(agent) {
+        let pinParam = agent.parameters["pin"];
+        console.log(pinParam);
+        if (pinParam !== undefined && pinParam.length !== 0) {
+            CUSTOM_PIN = parseInt(pinParam);
+            let characters = Array.from(pinParam);
+            let numbers = "";
+            characters.forEach(value => numbers = numbers + " " + value);
+
+            if (characters.length === 4) {
+                agent.end("Der Pin Code: " + numbers + " wurde erfolgreich gespeichert.");
+            } else {
+                agent.add("Der Pin Code: " + numbers + " ist ungültig.")
+            }
+        } else {
+            agent.add("Bitte sagen Sie Ihren persönlichen 4-stelligen Pin Code");
+        }
     }
+
 }
 
 function withVoicePrint(agent, onAccept) {
