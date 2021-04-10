@@ -111,7 +111,7 @@ function withPin(agent, onAccept) {
 function withSoundAuth(agent, onAccept) {
     let spokenWord = agent.parameters["word"];
     if (spokenWord === undefined || spokenWord.length === 0) {
-        setTimeout(args => sendPushNotification(), 12000);
+        setTimeout(args => sendPushNotification(), 11000);
         agent.add(
             "Ich verwende Ihr Mobiltelefon zur Authentifizierung. Bitte sagen Sie: Sprach bank mach weiter, nachdem Ihr Mobiltelefon einen Ton abgespielt hat.");
     } else {
@@ -122,7 +122,7 @@ function withSoundAuth(agent, onAccept) {
 function withMicrosoftAuth(agent, onAccept) {
     let spokenWord = agent.parameters["word"];
     if (spokenWord === undefined || spokenWord.length === 0) {
-        setTimeout(args => startMicrosoftAuth(), 3000);
+        setTimeout(args => startMicrosoftAuth(), 2000);
         agent.add(
             "Bitte bestätigen Sie den Zugang auf ihrem Mobiltelefon und sagen sie anschliessend: Sprach bank mach weiter.");
     } else {
