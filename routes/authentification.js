@@ -122,7 +122,7 @@ function withSoundAuth(agent, onAccept) {
 function withMicrosoftAuth(agent, onAccept) {
     let spokenWord = agent.parameters["word"];
     if (spokenWord === undefined || spokenWord.length === 0) {
-        setTimeout(args => startMicrosoftAuth(), 2000);
+        setTimeout(args => startMicrosoftAuth(), 500);
         agent.add(
             "Bitte bestätigen Sie den Zugang auf ihrem Mobiltelefon und sagen sie anschliessend: Sprach bank mach weiter.");
     } else {
